@@ -1,0 +1,79 @@
+
+html {
+    font-size: 62.5%;
+}
+
+body {
+    box-sizing: border-box;
+    padding: 0px;
+    margin: 0px;   
+}
+
+header {
+    .header_container {
+        margin: 0 auto 50px;
+        text-align: center;
+        img {
+            height: 200px;
+            border: solid 1px red;
+        }
+    }
+}
+
+.table_container {
+    margin: 0 25px;
+
+    h2 {
+        text-align: center;
+        font-size: 5rem;
+        text-transform: capitalize;
+        width: auto;
+        border: solid 1px red;
+    }
+
+    .car_container {
+
+
+        .new_vehicle {
+            width: 100%;
+            font-size: 3rem;
+            text-align: center;
+            border: solid 1px red;
+        }
+
+        .car_item {
+        
+            .car_header {
+                display: flex;
+                flex-wrap: nowrap;
+                justify-content: space-between;
+                flex-direction: row;
+                // height: 100px;
+                width: 100%;
+                // padding: 25px;
+                // margin: 0;
+                // border: solid 1px green;
+                background-color: #bbb;
+                h3 {
+                    display: inline-block;
+                    padding: 0 0 0 25px;
+                    border: 0;
+                    font-size: 4rem;
+                    height: 100%;
+                    width: 80%;
+                    text-transform: capitalize;
+                    // border: solid 1px orange;
+                }
+                i {
+                    display: inline-block;
+                    font-size: 5rem;
+                    width: 20%;
+                    margin: auto 0;
+                    // border: solid 1px blue;
+                }
+            }
+        }
+    }
+}
+
+@import "_index_media.scss";
