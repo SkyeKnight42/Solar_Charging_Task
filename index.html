@@ -17,17 +17,37 @@
             <div class="table_container">
                 <h2>Charging Chart</h2>
                 <div class="car_container">
-                    <span class="new_vehicle">Create Vehicle</span>
-                    <div class="car_item">
+                    <!-- <div class="car_item">
                         <div class="car_header">
                             <h3>Car 1</h3>
                             <i class="fas fa-arrow-down"></i>
                         </div>
-                    </div>
+                    </div> -->
+                </div>
+                <div class="car_create_container">
+                    <form>
+                        <label for="registration">Registration:</label><br>
+                        <p class="error" id="reg_error"></p>
+                        <input type="text" id="registration_input" placeholder="AB12 EFG" name="registration"><br>
+                        <label for="stored_range">Stored Range:</label><br>
+                        <p class="error" id="stored_distance_error"></p>
+                        <p>Enter the stored charge on the vehicle.</p>
+                        <input type="number" id="stored_range" name="stored_range"><br>
+                        <label for="next_distance">Next Journey Distance:</label><br>
+                        <p class="error" id="next_distance_error"></p>
+                        <p>Enter the next distance you wish to make in miles from A to B only.</p>
+                        <input type="text" id="next_distance_input" placeholder="120" name="next_distance"><br>
+                        <label for="leave_time">Planned Leave Time:</label><br>
+                        <p class="error" id="leave_time_error"></p>
+                        <input type="text" id="leave_time_input" placeholder="13:50" name="leave_time"><br>
+                    </form>
+                    <a class="create_vehicle" id="create_vehicle">Create Vehicle</a>
+
                 </div>
             </div>
         <footer>
 
         </footer>
+        <script type="text/JavaScript" src="JavaScript/Charging_Calculator.js"></script>
     </body>
 </html>

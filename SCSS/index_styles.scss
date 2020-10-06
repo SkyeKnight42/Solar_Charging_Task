@@ -32,14 +32,8 @@ header {
     }
 
     .car_container {
+        border: solid 1px green;
 
-
-        .new_vehicle {
-            width: 100%;
-            font-size: 3rem;
-            text-align: center;
-            border: solid 1px red;
-        }
 
         .car_item {
         
@@ -48,12 +42,10 @@ header {
                 flex-wrap: nowrap;
                 justify-content: space-between;
                 flex-direction: row;
-                // height: 100px;
                 width: 100%;
-                // padding: 25px;
-                // margin: 0;
-                // border: solid 1px green;
                 background-color: #bbb;
+                border-radius: 10px;
+                text-align: left;
                 h3 {
                     display: inline-block;
                     padding: 0 0 0 25px;
@@ -69,8 +61,51 @@ header {
                     font-size: 5rem;
                     width: 20%;
                     margin: auto 0;
-                    // border: solid 1px blue;
                 }
+            }
+        }
+    }
+
+    .car_create_container {
+        form {
+            margin: 20px 0;
+            label, input, p {
+                font-size: 2.4rem;
+                margin-bottom: 10px;
+                width: 100%;
+                margin: 10px 0;
+            }
+            label {
+                font-size: 3.2rem;
+            }
+            input {
+                padding-left: 5px;
+                margin-bottom: 40px;
+            }
+            // .enabled {
+            //     display: block;
+            // }
+            .error {
+                // display: none;
+                color: red;
+                font-size: 2.4rem;
+                text-transform: capitalize;
+            }
+        }
+        .create_vehicle {
+            display: block;
+            text-align: center;
+            width: 100%;
+            font-size: 3rem;
+            margin: 0 0 25px;
+            padding: 20px 0;
+            background-color: #555;
+            border: solid 3px grey;
+            border-radius: 10px;
+            color: white;
+
+            &:hover {
+                background-color: #333;
             }
         }
     }

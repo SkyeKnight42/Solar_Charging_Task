@@ -31,11 +31,8 @@ header .header_container img {
   border: solid 1px red;
 }
 
-.table_container .car_container .new_vehicle {
-  width: 100%;
-  font-size: 3rem;
-  text-align: center;
-  border: solid 1px red;
+.table_container .car_container {
+  border: solid 1px green;
 }
 
 .table_container .car_container .car_item .car_header {
@@ -53,6 +50,8 @@ header .header_container img {
           flex-direction: row;
   width: 100%;
   background-color: #bbb;
+  border-radius: 10px;
+  text-align: left;
 }
 
 .table_container .car_container .car_item .car_header h3 {
@@ -70,5 +69,48 @@ header .header_container img {
   font-size: 5rem;
   width: 20%;
   margin: auto 0;
+}
+
+.table_container .car_create_container form {
+  margin: 20px 0;
+}
+
+.table_container .car_create_container form label, .table_container .car_create_container form input, .table_container .car_create_container form p {
+  font-size: 2.4rem;
+  margin-bottom: 10px;
+  width: 100%;
+  margin: 10px 0;
+}
+
+.table_container .car_create_container form label {
+  font-size: 3.2rem;
+}
+
+.table_container .car_create_container form input {
+  padding-left: 5px;
+  margin-bottom: 40px;
+}
+
+.table_container .car_create_container form .error {
+  color: red;
+  font-size: 2.4rem;
+  text-transform: capitalize;
+}
+
+.table_container .car_create_container .create_vehicle {
+  display: block;
+  text-align: center;
+  width: 100%;
+  font-size: 3rem;
+  margin: 0 0 25px;
+  padding: 20px 0;
+  background-color: #555;
+  border: solid 3px grey;
+  border-radius: 10px;
+  color: white;
+}
+
+.table_container .car_create_container .create_vehicle:hover {
+  background-color: #333;
 }
 /*# sourceMappingURL=index_styles.css.map */
