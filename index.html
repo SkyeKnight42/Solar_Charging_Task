@@ -6,6 +6,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
         <link rel="stylesheet" href="SCSS/index_styles.css">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet"> 
         <script src="https://kit.fontawesome.com/c438a556fe.js" crossorigin="anonymous"></script>
     </head>
     <body>
@@ -17,12 +18,109 @@
             <div class="table_container">
                 <h2>Charging Chart</h2>
                 <div class="car_container">
-                    <!-- <div class="car_item">
-                        <div class="car_header">
-                            <h3>Car 1</h3>
-                            <i class="fas fa-arrow-down"></i>
-                        </div>
-                    </div> -->
+                    <table>
+                        <tr>
+                            <th rowspan="2" class="reg">Registration</th>
+                            <th colspan="10" class="hours">Hours<br>kWh</th>
+                            <th rowspan="2" class="charge">Charge Accumilated</th>
+                        </tr>
+                        <tr>
+                            <td>40</td>
+                            <td>50</td>
+                            <td>60</td>
+                            <td>70</td>
+                            <td>80</td>
+                            <td>70</td>
+                            <td>70</td>
+                            <td>60</td>
+                            <td>50</td>
+                            <td class="last_kwh">40</td>
+                        </tr>
+                        <tr>
+                            <td class="car reg">--reg--</td>
+                            <td class="charging charge_call"></td>
+                            <td class="charge_call"></td>
+                            <td class="charge_call"></td>
+                            <td class="charge_call"></td>
+                            <td class="charge_call"></td>
+                            <td class="charge_call"></td>
+                            <td class="charge_call"></td>
+                            <td class="charge_call"></td>
+                            <td class="charge_call"></td>
+                            <td class="charge_call"></td>
+                            <td class="charge_total">70% / 175 miles</td>
+                        </tr>
+                        <tr>
+                            <td class="car reg">--reg--</td>
+                            <td class="charge_call"></td>
+                            <td class="charge_call"></td>
+                            <td class="charge_call"></td>
+                            <td class="charge_call"></td>
+                            <td class="charge_call"></td>
+                            <td class="charge_call"></td>
+                            <td class="charge_call"></td>
+                            <td class="charge_call"></td>
+                            <td class="charge_call"></td>
+                            <td class="charge_call"></td>
+                            <td class="charge_total">70% / 175 miles</td>
+                        </tr>
+                        <tr>
+                            <td class="car reg">--reg--</td>
+                            <td class="charge_call"></td>
+                            <td class="charge_call"></td>
+                            <td class="charge_call"></td>
+                            <td class="charge_call"></td>
+                            <td class="charge_call"></td>
+                            <td class="charge_call"></td>
+                            <td class="charge_call"></td>
+                            <td class="charge_call"></td>
+                            <td class="charge_call"></td>
+                            <td class="charge_call"></td>
+                            <td class="charge_total">70% / 175 miles</td>
+                        </tr>
+                        <tr>
+                            <td class="car reg">--reg--</td>
+                            <td class="charge_call"></td>
+                            <td class="charge_call"></td>
+                            <td class="charge_call"></td>
+                            <td class="charge_call"></td>
+                            <td class="charge_call"></td>
+                            <td class="charge_call"></td>
+                            <td class="charge_call"></td>
+                            <td class="charge_call"></td>
+                            <td class="charge_call"></td>
+                            <td class="charge_call"></td>
+                            <td class="charge_total">70% / 175 miles</td>
+                        </tr>
+                        <tr>
+                            <td class="car reg">--reg--</td>
+                            <td class="charge_call"></td>
+                            <td class="charge_call"></td>
+                            <td class="charge_call"></td>
+                            <td class="charge_call"></td>
+                            <td class="charge_call"></td>
+                            <td class="charge_call"></td>
+                            <td class="charge_call"></td>
+                            <td class="charge_call"></td>
+                            <td class="charge_call"></td>
+                            <td class="charge_call"></td>
+                            <td class="charge_total">70% / 175 miles</td>
+                        </tr>
+                        <tr>
+                            <td class="car reg">--reg--</td>
+                            <td class="charge_call"></td>
+                            <td class="charge_call"></td>
+                            <td class="charge_call"></td>
+                            <td class="charge_call"></td>
+                            <td class="charge_call"></td>
+                            <td class="charge_call"></td>
+                            <td class="charge_call"></td>
+                            <td class="charge_call"></td>
+                            <td class="charge_call"></td>
+                            <td class="charge_call"></td>
+                            <td class="charge_total">70% / 175 miles</td>
+                        </tr>
+                    </table>
                 </div>
                 <div class="car_create_container">
                     <form>
@@ -39,7 +137,7 @@
                         <input type="text" id="next_distance_input" placeholder="120" name="next_distance"><br>
                         <label for="leave_time">Planned Leave Time:</label><br>
                         <p class="error" id="leave_time_error"></p>
-                        <input type="text" id="leave_time_input" placeholder="13:50" name="leave_time"><br>
+                        <input type="text" id="leave_time_input" placeholder="e.g 08:50 or 13:50" name="leave_time"><br>
                     </form>
                     <a class="create_vehicle" id="create_vehicle">Create Vehicle</a>
 
