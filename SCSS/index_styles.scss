@@ -109,12 +109,13 @@ header {
                 .charging {
                     background-color: green;
                 }
+            }
 
-                .last_kwh {
+            .charging_values {
+                td:last-of-type {
                     border-right: none;
                 }
             }
-
 
             tr:last-of-type {
                 td {

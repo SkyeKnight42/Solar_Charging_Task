@@ -114,7 +114,7 @@ header .header_container img {
   background-color: green;
 }
 
-.table_container .car_container table tr .last_kwh {
+.table_container .car_container table .charging_values td:last-of-type {
   border-right: none;
 }
 
