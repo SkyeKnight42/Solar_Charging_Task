@@ -114,6 +114,11 @@ header .header_container img {
   background-color: green;
 }
 
+.table_container .car_container table tr .remove_vehicle {
+  background-color: red;
+  color: white;
+}
+
 .table_container .car_container table .charging_values td:last-of-type {
   border-right: none;
 }

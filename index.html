@@ -22,7 +22,7 @@
                         <tr>
                             <th rowspan="2" class="reg">Registration</th>
                             <th colspan="10" class="hours">Hours<br>kWh</th>
-                            <th rowspan="2" class="charge">Charge Accumilated</th>
+                            <th rowspan="2" class="charge">Charge Stored</th>
                         </tr>
                         <tr class="charging_values">
                             <td>40</td>
@@ -36,7 +36,7 @@
                             <td>50</td>
                             <td class="last_kwh">40</td>
                         </tr>
-                        <tr>
+                        <tr class="vehicle_statistics">
                             <td class="car reg">--reg--</td>
                             <td class="charge_cel"></td>
                             <td class="charge_cel"></td>
@@ -49,8 +49,9 @@
                             <td class="charge_cel"></td>
                             <td class="charge_cel"></td>
                             <td class="charge_total">70% / 175 miles</td>
+                            <td class="remove_vehicle">X</td>
                         </tr>
-                        <tr>
+                        <tr class="vehicle_statistics">
                             <td class="car reg">--reg--</td>
                             <td class="charge_cel"></td>
                             <td class="charge_cel"></td>
@@ -63,8 +64,9 @@
                             <td class="charge_cel"></td>
                             <td class="charge_cel"></td>
                             <td class="charge_total">70% / 175 miles</td>
+                            <td class="remove_vehicle">X</td>
                         </tr>
-                        <tr>
+                        <tr class="vehicle_statistics">
                             <td class="car reg">--reg--</td>
                             <td class="charge_cel"></td>
                             <td class="charge_cel"></td>
@@ -77,8 +79,9 @@
                             <td class="charge_cel"></td>
                             <td class="charge_cel"></td>
                             <td class="charge_total">70% / 175 miles</td>
+                            <td class="remove_vehicle">X</td>
                         </tr>
-                        <tr>
+                        <tr class="vehicle_statistics">
                             <td class="car reg">--reg--</td>
                             <td class="charge_cel"></td>
                             <td class="charge_cel"></td>
@@ -91,8 +94,9 @@
                             <td class="charge_cel"></td>
                             <td class="charge_cel"></td>
                             <td class="charge_total">70% / 175 miles</td>
+                            <td class="remove_vehicle">X</td>
                         </tr>
-                        <tr>
+                        <tr class="vehicle_statistics">
                             <td class="car reg">--reg--</td>
                             <td class="charge_cel"></td>
                             <td class="charge_cel"></td>
@@ -105,8 +109,9 @@
                             <td class="charge_cel"></td>
                             <td class="charge_cel"></td>
                             <td class="charge_total">70% / 175 miles</td>
+                            <td class="remove_vehicle">X</td>
                         </tr>
-                        <tr>
+                        <tr class="vehicle_statistics">
                             <td class="car reg">--reg--</td>
                             <td class="charge_cel"></td>
                             <td class="charge_cel"></td>
@@ -119,6 +124,7 @@
                             <td class="charge_cel"></td>
                             <td class="charge_cel"></td>
                             <td class="charge_total">70% / 175 miles</td>
+                            <td class="remove_vehicle">X</td>
                         </tr>
                     </table>
                 </div>
@@ -130,7 +136,7 @@
                         <label for="stored_range">Stored Range:</label><br>
                         <p class="error" id="stored_distance_error"></p>
                         <p>Enter the stored charge on the vehicle.</p>
-                        <input type="number" id="stored_range" name="stored_range"><br>
+                        <input type="text" id="stored_range" name="stored_range"><br>
                         <label for="next_distance">Next Journey Distance:</label><br>
                         <p class="error" id="next_distance_error"></p>
                         <p>Enter the next distance you wish to make in miles from A to B only.</p>
