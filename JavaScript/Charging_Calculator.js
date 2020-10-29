@@ -28,6 +28,10 @@ for (let x = 0; x < hourButtons.length; x++) {
     hourButtons[x].addEventListener('click', function() {
         systemHour = parseInt(hourButtons[x].textContent)
 
+        console.log("systemHour changed to: " + systemHour)
+
+
+
         // When the hour changes
         // Remove cars that have enough charge
 
@@ -321,11 +325,26 @@ function assignCarsToCharge(_hour) {
     availableSolarValues = solarValues
 
     console.log("sorted car length: " + sortedCarArray.length)
+
+    let availablePower = availableSolarValues[parseInt(_hour)-7]
     // For each car, 
     for (let x = 0; x < sortedCarArray.length; x++) {
         let charge = sortedCarArray[x].currentrange
         let distance = ((parseInt(sortedCarArray[x].rangeneeded) * 2) * 1.1)
 
-        console.log("Car: " + x + " has :" + charge + " stored, and needs to travel " + distance + " miles.")
+        if (availablePower > 11) {
+            
+        } else {
+
+        }
+
+        // console.log("Car: " + x + " has :" + charge + " stored, and needs to travel " + distance + " miles.")
+
+        // if (availableSolarValues[hour-7])
+
+        console.log(availableSolarValues[parseInt(_hour)-7])
+
+
     }
+
 }
