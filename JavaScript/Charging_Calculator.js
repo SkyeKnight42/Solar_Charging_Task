@@ -1,10 +1,12 @@
 
 class Car {
-    constructor(carid, registration, currentrange, rangeneeded, leavingtimehour, leavingtimeminute, chargescore) {
+    constructor(carid, registration, currentrangemiles, rangedneededmiles, currentpower, totalpowerneeded, leavingtimehour, leavingtimeminute, chargescore) {
         this.carid = carid;
         this.registration = registration;
-        this.currentrange = currentrange;
-        this.rangeneeded = rangeneeded;
+        this.currentrangemiles = currentrangemiles;
+        this.rangedneededmiles = rangedneededmiles;
+        this.currentpower = currentpower
+        this.totalpowerneeded = totalpowerneeded;
         this.leavingtimehour = leavingtimehour;
         this.leavingtimeminute = leavingtimeminute;
         this.chargescore = chargescore
@@ -25,6 +27,9 @@ const carRegBox = document.getElementsByClassName('car_reg')
 const carChargingBox = document.getElementsByClassName('charge_cel')
 const chargeValueBox = document.getElementsByClassName('charge_total')
 console.log("Charge total count: " + chargeValueBox.length)
+
+console.log("carChargingBox count: " + carChargingBox.length)
+
 // //#region Hour Button Event Listeners
 
 for (let x = 0; x < hourButtons.length; x++) {
@@ -83,13 +88,16 @@ addCarButton.addEventListener('click', function() {
     if (carArray.length < 6) {
         // These will either equal false, or the validated correct input.
         let carReg = ValidateRegistration(registrationInput.value)
-        let carCharge = ValidateStoredRange(rangeInput.value)
-        let carJourney = ValidateNextJourney(nextDistanceInput.value)
+        let carCurrentMiles = ValidateStoredRange(rangeInput.value)
+        let carNeededMiles = ValidateNextJourney(nextDistanceInput.value)
         let carLeaveTime = ValidateLeaveTime(leaveTimeInput.value)
 
         // If every input field is valid, do this code.
-        if (carReg != false && carCharge != false && carJourney != false && carLeaveTime != false) {
-            addCar(carCounter, carReg, carCharge, carJourney, carLeaveTime[0], carLeaveTime[1])
+        if (carReg != false && carCurrentMiles != false && carNeededMiles != false && carLeaveTime != false) {
+
+            let totalchargeneeded = Math.round(carNeededMiles/4)
+            let currentcharge = carCurrentMiles/4
+            addCar(carCounter, carReg, carCurrentMiles, carNeededMiles, currentcharge, totalchargeneeded, carLeaveTime[0], carLeaveTime[1])
 
             // console.log(carArray)
         }
@@ -217,15 +225,15 @@ function ValidateLeaveTime(value) {
 
 // #endregion
 
-function addCar(carCounter, carReg, carCharge, carJourney, carLeaveTime) {
-    let newCar = new Car(carCounter, carReg, carCharge, carJourney, carLeaveTime, null)
+function addCar(carCounter, carReg, carCurrentMiles, carNeededMiles, carCurrentCharge, carTotalNeededCharge, carLeaveTimeHour, carLeaveTimeMinute) {
+    let newCar = new Car(carCounter, carReg, carCurrentMiles, carNeededMiles, carCurrentCharge, carTotalNeededCharge, carLeaveTimeHour, carLeaveTimeMinute, null)
     carArray.push(newCar)
     carCounter++
 
-    chargeCars()
+    setChargeScore()
     sortCars()
     CalculateCharging(systemHour)
-    ChargeCars()
+    chargeCar()
     displayCars()
 
 }
@@ -236,7 +244,7 @@ function addCar(carCounter, carReg, carCharge, carJourney, carLeaveTime) {
 let sortedCarArray = []
 
 
-function chargeCars() {
+function setChargeScore() {
     
     let scoreForCars = [] 
 
@@ -252,21 +260,17 @@ function chargeCars() {
         currentHour++
     }
 
-    // console.log("Current Hour Rounded to: " + currentHour)
-
-    // console.log("Car Array Length: " + carArray.length)
-
     // Gets and assigns a charging score
     for (let x = 0; x < carArray.length; x++) { // For each car in the array
 
-        let currentRange = carArray[x].currentrange 
-        let rangeNeeded = carArray[x].rangeneeded
-        // console.log("Current Range: " + currentRange)
-        // console.log("Range Needed: " + rangeNeeded)
+        let currentrangemiles = carArray[x].currentrangemiles 
+        let rangedneededmiles = carArray[x].rangedneededmiles
+        // console.log("Current Range: " + currentrangemiles)
+        // console.log("Range Needed: " + rangedneededmiles)
 
-        if (currentRange < rangeNeeded) { // Look if the car has enough charge or not.
+        if (currentrangemiles < rangedneededmiles) { // Look if the car has enough charge or not.
 
-            // console.log("Range Needed: " + rangeNeeded)
+            // console.log("Range Needed: " + rangedneededmiles)
 
             let hoursLeft
             let carHour = carArray[x].leavingtimehour
@@ -276,9 +280,9 @@ function chargeCars() {
                 hoursLeft = carHour - currentHour
             }
 
-            console.log("CR " + currentRange)
-            console.log("RN " + rangeNeeded)
-            let distanceToCharge = rangeNeeded - currentRange // How many miles of charge is needed
+            console.log("CR " + currentrangemiles)
+            console.log("RN " + rangedneededmiles)
+            let distanceToCharge = rangedneededmiles - currentrangemiles // How many miles of charge is needed
             let kwhToCharge = distanceToCharge / 4; // How many kwh does the remaining distance require?
             let chargeScore = kwhToCharge / hoursLeft // Average kwh Needed to charge per hour
 
@@ -335,64 +339,88 @@ let hourChargingArray = []
 
 function CalculateCharging(_hour) {
 
-    // console.log("charging cars")
+    // Reset the hour Charging Array
+    hourChargingArray = []
+
     // Reset the available charging amount
     availableSolarValues = solarValues
 
     let hourIndex = 7
     console.log("hourIndex: " + hourIndex)
 
-    // For every hour
-    for (let x = 0; x < 11; x++) {
-        // console.log("CalculateCharging " + x)
-        // Are we past the current time?
-        console.log("hourIndex: " + hourIndex + " x: " + x)
-        if (x >= hourIndex) { // No
-             
-            // For each car
-            for (let z = 0; z < sortedCarArray.length; z++) {
+    console.log("Available Solar Values:")
+    console.log(availableSolarValues)
+    // For every car
+    for (let x = 0; x < sortedCarArray.length; x++) {
 
-                // console.log("CalculateCharging " + z)
+        // For every hour
+        for (let y = 0; y < 10; y++) {
 
-                let carChargeScore = sortedCarArray[z].chargescore
-                // console.log("carChargeScore: " + carChargeScore)
-                let carRangeStored = sortedCarArray[z].currentrange
-                // console.log("carRangeStored: " + carRangeStored)
-                let carRangeNeeded = sortedCarArray[z].rangeneeded
-                // console.log("carRangeNeeded: " + carRangeNeeded)
+            console.log()
+            // console.log("System hour is " + systemHour)
+            // console.log("_hour is " + _hour)
+            console.log("Looking at hour is " + (y + 7))
+            // Are we too late to charge the car for this hour
+            if (_hour <= (y + 7)) {
 
-                // Test the car does not have enough stored power
-                if (carRangeStored > carRangeNeeded) {
+                console.log("we can charge the car this hour")
+                // console.log("Current Hour " + systemHour + " Looking to charge in hour " + (y + 7))
+                // NO
+                let distanceStored = sortedCarArray[x].currentrangemiles
+                let distanceNeeded = sortedCarArray[x].rangedneededmiles
 
-                    // Test if we can charge the full carChargeScore
-                    console.log("Hour is " + systemHour + " charge available is: " + availableSolarValues[hourIndex])
-                    if (availableSolarValues[hourIndex] >= carChargeScore) {
+                // Do we need to charge this car?
+                if (distanceStored < distanceNeeded) {
 
-                        // Charge the car up the carChargeScore amount * the mileage per kwh
-                        // hourChargingArray[x*z] = carChargeScore 
-                        console.log("Car will charge: " + carChargeScore)
-                        hourChargingArray.push(carChargeScore)
-                        availableSolarValues[x] -= carChargeScore
-                        carRangeStored += (carChargeScore * 4)
-                        // sortedCarArray[z].currentrange += (carChargeScore * 4)
-                        // carChargingBox[z*10 + (parseInt(systemHour) - 7)].classList.add("charging")
+                    console.log("we need to charge " + sortedCarArray[x].registration)
+                    // YES
+
+                    // Do we have enough power to charge the car at a full 11kwh
+
+                    if (availableSolarValues[y] >= 11) {
+
+                        // YES
+                        console.log("We have a full 11kwh power available")
+                        console.log("Charging the " + sortedCarArray[x].registration + " at 11kwh at " + (y + 7))
+
+                        availableSolarValues[y] -= 11
+                        hourChargingArray.push(11)
+
+                    } else if (availableSolarValues[y] > 0) {
+
+                        // SOME 
+                        let chargeRemaining = availableSolarValues[y]
+
+                        console.log("We only have " + availableSolarValues[y] + "kwh available")
+                        console.log("Charging the car at " + chargeRemaining + "kwh at " + (y + 7))
+
+                        // the remaining charge left available
+                        availableSolarValues[y] = 0
+                        hourChargingArray.push(chargeRemaining)
+                        
 
                     } else {
 
-                        hourChargingArray.push(availableSolarValues[hourIndex])
-                        availableSolarValues[x] = 0
-                        carRangeStored += (availableSolarValues[hourIndex] * 4)
-                        // sortedCarArray[z].currentrange += (availableSolarValues[hourIndex] * 4)
-                        // carChargingBox[z*10 + (parseInt(systemHour) - 7)].classList.add("charging")
+                        // NONE
+                        console.log("We have no power available.")
+
+                        hourChargingArray.push(0)
+
                     }
-                    // Set the hour box for the car to green 
+
+
+                } else {
+
+                    // NO the car is charged
+                    console.log("The car is already charged.")
+                    hourChargingArray.push(0)
                 }
-            }
 
-        } else { // Yes
+            } else {
 
-            // Set the empty hour to zero
-            for (let y = 0; y < 6; y++) {
+                console.log("We are too late to charge the car for this hour")
+                // YES
+                // To late to charge the car for this hour
                 hourChargingArray.push(0)
             }
         }
@@ -400,8 +428,9 @@ function CalculateCharging(_hour) {
     }
 }
 
-function ChargeCars() {
-
+function chargeCar() {
+    console.log()
+    console.log(hourChargingArray)
     console.log("hourChargingArray length: " + hourChargingArray.length)
     for (let x = 0; x < hourChargingArray.length; x++) {
 
@@ -417,21 +446,21 @@ function ChargeCars() {
 
 function displayCars() {
 
-    for (let x = 0; x < carChargingBox.length; x++) {
-        carChargingBox[x].textContent = x
-        carChargingBox[x].classList.remove('charging')
-    }
+    // for (let x = 0; x < carChargingBox.length; x++) {
+    //     carChargingBox[x].textContent = x
+    //     carChargingBox[x].classList.remove('charging')
+    // }
 
     for (let x = 0; x < sortedCarArray.length; x++) {
         console.log("Charge Score: " + sortedCarArray[x].chargescore)
-        let totalDistance = (sortedCarArray[x].rangeneeded * 2) * 1.1
-        carRegBox[x].textContent = sortedCarArray[x].registration + " -> " + Math.round((sortedCarArray[x].currentrange / totalDistance)*100) + "%"
-        if (sortedCarArray[x].currentrange >= sortedCarArray[x].rangeneeded) {
+        let totalDistance = (sortedCarArray[x].rangedneededmiles * 2) * 1.1
+        carRegBox[x].textContent = sortedCarArray[x].registration + " -> " + Math.round((sortedCarArray[x].currentrangemiles / totalDistance)*100) + "%"
+        if (sortedCarArray[x].currentrangemiles >= sortedCarArray[x].rangedneededmiles) {
 
             chargeValueBox[x].textContent = "Charged!"
 
         } else {
-            chargeValueBox[x].textContent = sortedCarArray[x].currentrange + '/' + Math.round(sortedCarArray[x].rangeneeded) + ' miles'
+            chargeValueBox[x].textContent = sortedCarArray[x].currentrangemiles + '/' + Math.round(sortedCarArray[x].rangedneededmiles) + ' miles'
 
             // let chargeBoxToSelect = x * 10
             // console.log("ChargeBoxToSelect: " + chargeBoxToSelect)
