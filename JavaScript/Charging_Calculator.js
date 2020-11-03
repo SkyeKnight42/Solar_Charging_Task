@@ -9,7 +9,8 @@ class Car {
         this.totalpowerneeded = totalpowerneeded;
         this.leavingtimehour = leavingtimehour;
         this.leavingtimeminute = leavingtimeminute;
-        this.chargescore = chargescore
+        this.chargescore = chargescore;
+        this.carChargePerHour = [];
     }
 }
 
@@ -122,10 +123,10 @@ function ValidateRegistration(value) {
 }
 
 function ValidateStoredRange(value) {
-    let rangeValue = value
-    //console.log("Value: " + rangeValue)
+    let rangeValue = parseInt(value)
+    console.log("Value: " + rangeValue)
     if (parseInt(rangeValue)) {
-        if (rangeValue >= -1 && rangeValue <= 250) {
+        if (rangeValue >= 0 && rangeValue <= 250) {
             storedDistanceError.textContent = ''
             //console.log("Stored Range Validation Passed")
             return rangeValue
@@ -235,6 +236,8 @@ function addCar(carCounter, carReg, carCurrentMiles, carNeededMiles, carCurrentC
     CalculateCharging(systemHour)
     chargeCar()
     displayCars()
+
+    console.log(sortedCarArray[0].carChargePerHour)
 
 }
 
@@ -384,6 +387,7 @@ function CalculateCharging(_hour) {
                         console.log("Charging the " + sortedCarArray[x].registration + " at 11kwh at " + (y + 7))
 
                         availableSolarValues[y] -= 11
+                        sortedCarArray[x].carChargePerHour.push(11)
                         hourChargingArray.push(11)
 
                     } else if (availableSolarValues[y] > 0) {
@@ -396,6 +400,7 @@ function CalculateCharging(_hour) {
 
                         // the remaining charge left available
                         availableSolarValues[y] = 0
+                        sortedCarArray[x].carChargePerHour.push(chargeRemaining)
                         hourChargingArray.push(chargeRemaining)
                         
 
@@ -403,17 +408,16 @@ function CalculateCharging(_hour) {
 
                         // NONE
                         console.log("We have no power available.")
-
                         hourChargingArray.push(0)
-
+                        sortedCarArray[x].carChargePerHour.push(0)
                     }
-
 
                 } else {
 
                     // NO the car is charged
                     console.log("The car is already charged.")
                     hourChargingArray.push(0)
+                    sortedCarArray[x].carChargePerHour.push(0)
                 }
 
             } else {
