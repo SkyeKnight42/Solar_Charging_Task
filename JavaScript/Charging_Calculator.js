@@ -125,7 +125,7 @@ function ValidateStoredRange(value) {
     let rangeValue = value
     //console.log("Value: " + rangeValue)
     if (parseInt(rangeValue)) {
-        if (rangeValue >= 0 && rangeValue <= 250) {
+        if (rangeValue >= -1 && rangeValue <= 250) {
             storedDistanceError.textContent = ''
             //console.log("Stored Range Validation Passed")
             return rangeValue
