@@ -359,14 +359,14 @@ function CalculateCharging(_hour) {
         // For every hour
         for (let y = 0; y < 10; y++) {
 
-            console.log()
+            // console.log()
             // console.log("System hour is " + systemHour)
             // console.log("_hour is " + _hour)
-            console.log("Looking at hour is " + (y + 7))
+            // console.log("Looking at hour is " + (y + 7))
             // Are we too late to charge the car for this hour
             if (_hour <= (y + 7)) {
 
-                console.log("we can charge the car this hour")
+                // console.log("we can charge the car this hour")
                 // console.log("Current Hour " + systemHour + " Looking to charge in hour " + (y + 7))
                 // NO
                 let distanceStored = sortedCarArray[x].currentrangemiles
@@ -375,7 +375,7 @@ function CalculateCharging(_hour) {
                 // Do we need to charge this car?
                 if (distanceStored < distanceNeeded) {
 
-                    console.log("we need to charge " + sortedCarArray[x].registration)
+                    // console.log("we need to charge " + sortedCarArray[x].registration)
                     // YES
 
                     // Do we have enough power to charge the car at a full 11kwh
@@ -383,8 +383,8 @@ function CalculateCharging(_hour) {
                     if (availableSolarValues[y] >= 11) {
 
                         // YES
-                        console.log("We have a full 11kwh power available")
-                        console.log("Charging the " + sortedCarArray[x].registration + " at 11kwh at " + (y + 7))
+                        // console.log("We have a full 11kwh power available")
+                        // console.log("Charging the " + sortedCarArray[x].registration + " at 11kwh at " + (y + 7))
 
                         availableSolarValues[y] -= 11
                         sortedCarArray[x].carChargePerHour.push(11)
@@ -395,8 +395,8 @@ function CalculateCharging(_hour) {
                         // SOME 
                         let chargeRemaining = availableSolarValues[y]
 
-                        console.log("We only have " + availableSolarValues[y] + "kwh available")
-                        console.log("Charging the car at " + chargeRemaining + "kwh at " + (y + 7))
+                        // console.log("We only have " + availableSolarValues[y] + "kwh available")
+                        // console.log("Charging the car at " + chargeRemaining + "kwh at " + (y + 7))
 
                         // the remaining charge left available
                         availableSolarValues[y] = 0
@@ -407,7 +407,7 @@ function CalculateCharging(_hour) {
                     } else {
 
                         // NONE
-                        console.log("We have no power available.")
+                        // console.log("We have no power available.")
                         hourChargingArray.push(0)
                         sortedCarArray[x].carChargePerHour.push(0)
                     }
@@ -415,20 +415,19 @@ function CalculateCharging(_hour) {
                 } else {
 
                     // NO the car is charged
-                    console.log("The car is already charged.")
+                    // console.log("The car is already charged.")
                     hourChargingArray.push(0)
                     sortedCarArray[x].carChargePerHour.push(0)
                 }
 
             } else {
 
-                console.log("We are too late to charge the car for this hour")
+                // console.log("We are too late to charge the car for this hour")
                 // YES
                 // To late to charge the car for this hour
                 hourChargingArray.push(0)
             }
         }
-
     }
 }
 
