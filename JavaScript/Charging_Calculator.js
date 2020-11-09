@@ -313,7 +313,7 @@ let hourChargingArray = []
 function CalculateCharging(_hour) {
 
     // Reset the hour Charging Array
-    hourChargingArray = [0,0,0,0,0,0,0,0,0,0]
+    hourChargingArray = []
 
     // Reset the available charging amount
     availableSolarValues = solarValues
@@ -443,7 +443,7 @@ function displayCars() {
 
     for (let x = 0; x < sortedCarArray.length; x++) {
         let totalDistance = (sortedCarArray[x].rangedneededmiles * 2) * 1.1
-        carRegBox[x].textContent = sortedCarArray[x].registration + " -> " + sortedCarArray[x].rangedneededmiles/4 + "kwh"
+        carRegBox[x].textContent = sortedCarArray[x].registration + " -> " + Math.round(sortedCarArray[x].rangedneededmiles/4) + "kwh"
         if (sortedCarArray[x].currentrangemiles >= sortedCarArray[x].rangedneededmiles) {
             chargeValueBox[x].textContent = "Charged!"
         } else {
