@@ -224,6 +224,8 @@ function addCar(carCounter, carReg, carCurrentMiles, carNeededMiles, carCurrentC
     CalculateCharging(systemHour)
     chargeCar()
     displayCars()
+
+    console.log()
 }
 
 // Work out when to charge the cars
@@ -316,13 +318,16 @@ function CalculateCharging(_hour) {
     hourChargingArray = []
 
     // Reset the available charging amount
-    availableSolarValues = solarValues
+
+    console.log("pre  solar values: " + solarValues)
+    // availableSolarValues = solarValues
+    console.log("pre available solar values: " + availableSolarValues)
 
     for (let solar = 0; solar < 10; solar++) {
         availableSolarValues[solar] = solarValues[solar]
     }
 
-    console.log(availableSolarValues)
+    console.log("post available solar values: " + availableSolarValues)
     let hourIndex = 7
 
     // For every car
