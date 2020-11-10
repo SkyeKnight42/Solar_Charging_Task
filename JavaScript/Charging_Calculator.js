@@ -14,6 +14,8 @@ class Car {
     }
 }
 
+// #region Variables
+// Car container
 let carArray = []
 
 // 7-8 8-9 9-10 10-11 11-12 12-13 13-14 14-15 15-16 16-17
@@ -27,37 +29,6 @@ const carStatistics = document.getElementsByClassName('vehicle_statistics')// Ta
 const carRegBox = document.getElementsByClassName('car_reg')
 const carChargingBox = document.getElementsByClassName('charge_cel')
 const chargeValueBox = document.getElementsByClassName('charge_total')
-// console.log("Charge total count: " + chargeValueBox.length)
-
-// console.log("carChargingBox count: " + carChargingBox.length)
-
-// //#region Hour Button Event Listeners
-
-for (let x = 0; x < hourButtons.length; x++) {
-    hourButtons[x].addEventListener('click', function() {
-        hourButtons[systemHour - 7].classList.remove('charging')
-        
-        systemHour = parseInt(hourButtons[x].textContent)
-        hourButtons[parseInt(hourButtons[x].textContent)-7].classList.add('charging')
-        console.log("systemHour changed to: " + systemHour)
-
-
-
-        // When the hour changes
-        // Remove cars that have enough charge
-
-        // Resort the charging priority
-
-        // Sequence cars to charge
-    })
-}
-
-// #endregion
-
-// Add Car Button
-const addCarButton = document.getElementById('create_vehicle')
-
-// #region Car Creation and Validation
 
 // Form Variables
 const registrationInput = document.getElementById('registration_input')
@@ -70,7 +41,6 @@ let hour
 let minute
 
 // Invalid Input Variables
-// #region
 const regError = document.getElementById('reg_error')
 const regErrorText = 'Invalid Registration'
 const storedDistanceError = document.getElementById('stored_distance_error')
@@ -79,10 +49,35 @@ const nextDistanceError = document.getElementById('next_distance_error')
 const nextDistanceErrorText = 'Invalid Distance'
 const leaveTimeError = document.getElementById('leave_time_error')
 const leaveTimeErrorText = 'Invalid Leave Time'
-// #endregion
+
+// Remove Car Buttons 
+const removeCarButton = document.getElementsByClassName('remove_vehicle')
+
+// Add Car Button
+const addCarButton = document.getElementById('create_vehicle')
 
 // This counts the current number of cars in the array
 let carCounter = 0;
+
+// For each car, that does not have enough range, get a score (charging left (kwh) / time until departure (h))
+let sortedCarArray = []
+
+// When will each car charge?
+let hourChargingArray = []
+
+// #endregion
+
+// Event Listeners
+// #region
+for (let x = 0; x < hourButtons.length; x++) {
+    hourButtons[x].addEventListener('click', function() {
+        hourButtons[systemHour - 7].classList.remove('charging')
+        
+        systemHour = parseInt(hourButtons[x].textContent)
+        hourButtons[parseInt(hourButtons[x].textContent)-7].classList.add('charging')
+        // console.log("systemHour changed to: " + systemHour)
+    })
+}
 
 addCarButton.addEventListener('click', function() {
 
@@ -93,6 +88,7 @@ addCarButton.addEventListener('click', function() {
         let carNeededMiles = ValidateNextJourney(nextDistanceInput.value)
         let carLeaveTime = ValidateLeaveTime(leaveTimeInput.value)
 
+        console.log(carReg)
         // If every input field is valid, do this code.
         if (carReg != false && carCurrentMiles != false && carNeededMiles != false && carLeaveTime != false) {
 
@@ -105,6 +101,16 @@ addCarButton.addEventListener('click', function() {
     }
 })
 
+for (let x = 0; x < removeCarButton.length; x++) {
+    removeCarButton[x].addEventListener('click', function() {
+        if (carArray[x] != null) {
+            removeCar(x)
+        }
+    })
+}
+
+// #endregion
+
 // #region Validate Car Values
 
 function ValidateRegistration(value) {
@@ -113,7 +119,17 @@ function ValidateRegistration(value) {
 
     if (regValue.match(regMatch) && regValue.length <= 8 && regValue.length > 6) {
         regError.textContent = ''
-        return regValue
+        for (let x = 0; x < carArray.length; x++) {
+            if (carArray[x].registration == regValue) {
+                regError.textContent = regErrorText
+                return false
+            }
+            return regValue
+        }
+        if (carArray.length == 0) {
+            return regValue
+        }
+
     } else {
         regError.textContent = regErrorText
         return false
@@ -209,11 +225,6 @@ function ValidateLeaveTime(value) {
 }
 // #endregion
 
-// #endregion
-
-// For each car, that does not have enough range, get a score (charging left (kwh) / time until departure (h))
-let sortedCarArray = []
-
 function addCar(carCounter, carReg, carCurrentMiles, carNeededMiles, carCurrentCharge, carTotalNeededCharge, carLeaveTimeHour, carLeaveTimeMinute) {
     let newCar = new Car(carCounter, carReg, carCurrentMiles, carNeededMiles, carCurrentCharge, carTotalNeededCharge, carLeaveTimeHour, carLeaveTimeMinute, null)
     carArray.push(newCar)
@@ -224,11 +235,7 @@ function addCar(carCounter, carReg, carCurrentMiles, carNeededMiles, carCurrentC
     CalculateCharging(systemHour)
     chargeCar()
     displayCars()
-
-    console.log()
 }
-
-// Work out when to charge the cars
 
 function setChargeScore() {
     
@@ -310,8 +317,6 @@ function sortCars() {
     }
 }
 
-let hourChargingArray = []
-
 function CalculateCharging(_hour) {
 
     // Reset the hour Charging Array
@@ -319,15 +324,10 @@ function CalculateCharging(_hour) {
 
     // Reset the available charging amount
 
-    console.log("pre  solar values: " + solarValues)
-    // availableSolarValues = solarValues
-    console.log("pre available solar values: " + availableSolarValues)
-
     for (let solar = 0; solar < 10; solar++) {
         availableSolarValues[solar] = solarValues[solar]
     }
 
-    console.log("post available solar values: " + availableSolarValues)
     let hourIndex = 7
 
     // For every car
@@ -339,20 +339,20 @@ function CalculateCharging(_hour) {
 
             // Are we too late to charge the car for this hour
             if (_hour <= (y + 7)) {
-
                 let powerStored = sortedCarArray[x].currentpower
                 let powerNeeded = sortedCarArray[x].totalpowerneeded
 
                 // power calculated for all hours total
                 
                 let totalPlannedCharge = 0
+
                 for (let h = 1; h <= sortedCarArray[x].carchargeperhour.length; h++) {
                     totalPlannedCharge += sortedCarArray[x].carchargeperhour[h-1]
                 }
 
                 // Do we need to charge this car?
                 // if (powerStored < powerNeeded) {
-                if (totalPlannedCharge < powerNeeded) {
+                if (totalPlannedCharge < (powerNeeded - powerStored)) {
 
                     // YES
 
@@ -361,7 +361,8 @@ function CalculateCharging(_hour) {
                     if (availableSolarValues[y] >= 11) {
 
                         // YES
-                        let remainingChargeNeeded = powerNeeded - totalPlannedCharge
+                        // SUM of total power needed minus (total scheduled charging + power already stored)
+                        let remainingChargeNeeded = powerNeeded - (totalPlannedCharge + powerStored)
 
                         if (remainingChargeNeeded > 11) {
                             availableSolarValues[y] -= 11
@@ -382,7 +383,6 @@ function CalculateCharging(_hour) {
                         availableSolarValues[y] = 0
                         sortedCarArray[x].carchargeperhour[y] = chargeRemaining
                         hourChargingArray.push(chargeRemaining)
-                        
 
                     } else {
 
@@ -402,26 +402,14 @@ function CalculateCharging(_hour) {
 
                 // YES
                 // To late to charge the car for this hour
+                sortedCarArray[x].carchargeperhour[y] = 0
                 hourChargingArray.push(0)
             }
         }
-
-    console.log("post: " + availableSolarValues)
-
     }
-
 }
 
 function chargeCar() {
-    for (let x = 0; x < hourChargingArray.length; x++) {
-
-        if (hourChargingArray[x] > 0) {
-            carChargingBox[x].classList.add('charging')
-        } else {
-            carChargingBox[x].classList.remove('charging')
-        }
-
-    }
 
     let chargeValues = []
     for (let x = 0; x < sortedCarArray.length; x++) {
@@ -432,27 +420,56 @@ function chargeCar() {
 
     }
 
-    for (let x = 0; x < chargeValues.length; x++) {
-
-        if (hourChargingArray[x] > 0) {
-            carChargingBox[x].classList.add('charging')
-            carChargingBox[x].textContent = chargeValues[x]
+    for (let x = 0; x < 60; x++) {
+        if (x < chargeValues.length) {
+            if (hourChargingArray[x] > 0) {
+                carChargingBox[x].classList.add('charging')
+                carChargingBox[x].textContent = chargeValues[x]
+            } else {
+                carChargingBox[x].classList.remove('charging')
+                carChargingBox[x].textContent = ""
+            }
         } else {
             carChargingBox[x].classList.remove('charging')
-            carChargingBox[x].textContent = ""
+            carChargingBox[x].textContent = ''
         }
+
     }
 }
 
 function displayCars() {
 
-    for (let x = 0; x < sortedCarArray.length; x++) {
-        let totalDistance = (sortedCarArray[x].rangedneededmiles * 2) * 1.1
-        carRegBox[x].textContent = sortedCarArray[x].registration + " -> " + Math.round(sortedCarArray[x].rangedneededmiles/4) + "kwh"
-        if (sortedCarArray[x].currentrangemiles >= sortedCarArray[x].rangedneededmiles) {
-            chargeValueBox[x].textContent = "Charged!"
+    for (let x = 0; x < 6; x++) {
+
+        if (x < sortedCarArray.length) {
+
+            carRegBox[x].textContent = sortedCarArray[x].registration + ": " + Math.round(sortedCarArray[x].currentpower/sortedCarArray[x].totalpowerneeded)*100 + "%"
+
+            if (sortedCarArray[x].currentrangemiles >= sortedCarArray[x].rangedneededmiles) {
+                chargeValueBox[x].textContent = "Charged!"
+            } else {
+                chargeValueBox[x].textContent = sortedCarArray[x].currentrangemiles + '/' + Math.round(sortedCarArray[x].rangedneededmiles) + ' miles'
+            }
+
         } else {
-            chargeValueBox[x].textContent = sortedCarArray[x].currentrangemiles + '/' + Math.round(sortedCarArray[x].rangedneededmiles) + ' miles'
+
+            carRegBox[x].textContent = ''
+            chargeValueBox[x].textContent = ''
+
         }
+
     }
+}
+
+function removeCar(index) {
+    carCounter--
+    console.log(carArray)
+    carArray.splice(index, 1)
+    console.log(carArray)
+
+    setChargeScore()
+    sortCars()
+    CalculateCharging(systemHour)
+    chargeCar()
+    displayCars()
 }
