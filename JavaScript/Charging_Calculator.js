@@ -225,6 +225,23 @@ function ValidateLeaveTime(value) {
 }
 // #endregion
 
+// #region Stored Distance Form 
+let storedpower = false;
+const noPowerButton = document.getElementById('no_power_button')
+const somePowerButton = document.getElementById('some_power_button')
+
+noPowerButton.addEventListener('click', function() {
+    if (storedpower) {
+        
+    }
+})
+
+somePowerButton.addEventListener('click', function() {
+    if (!storedpower) {
+        
+    }
+})
+// #endregion
 function addCar(carCounter, carReg, carCurrentMiles, carNeededMiles, carCurrentCharge, carTotalNeededCharge, carLeaveTimeHour, carLeaveTimeMinute) {
     let newCar = new Car(carCounter, carReg, carCurrentMiles, carNeededMiles, carCurrentCharge, carTotalNeededCharge, carLeaveTimeHour, carLeaveTimeMinute, null)
     carArray.push(newCar)

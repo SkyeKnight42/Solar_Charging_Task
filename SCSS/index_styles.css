@@ -151,6 +151,37 @@ header .header_container img {
   border: solid 1px grey;
 }
 
+.table_container .car_create_container form h3 {
+  font-size: 32px;
+  font-weight: normal;
+  width: 100%;
+}
+
+.table_container .car_create_container form .stored_power_options {
+  text-align: center;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
+}
+
+.table_container .car_create_container form .stored_power_options a {
+  width: auto;
+  padding: 0 25px;
+  height: 75px;
+  display: block;
+  background-color: grey;
+  color: white;
+  line-height: 75px;
+  border-radius: 10px;
+  font-size: 3rem;
+}
+
+.table_container .car_create_container form .stored_power_options a:hover {
+  background-color: darkgray;
+}
+
 .table_container .car_create_container form .error {
   color: red;
   font-size: 2.4rem;

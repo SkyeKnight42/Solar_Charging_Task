@@ -148,6 +148,32 @@ header {
                 border-radius: 3px;
                 border: solid 1px grey;
             }
+            h3 {
+                font-size: 32px;
+                font-weight: normal;
+                width: 100%;
+            }
+            .stored_power_options {
+                text-align: center;
+                display: flex;
+                justify-content: space-around;
+
+                a {
+                    // width: 200px;
+                    width: auto;
+                    padding: 0 25px;
+                    height: 75px;
+                    display: block;
+                    background-color: grey;
+                    color: white;
+                    line-height: 75px;
+                    border-radius: 10px;
+                    font-size: 3rem;
+                    &:hover {
+                        background-color: darkgray;
+                    }
+                }
+            }
 
             .error {
                 color: red;
