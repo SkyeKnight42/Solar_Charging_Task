@@ -172,6 +172,7 @@ header .header_container img {
   height: 75px;
   display: block;
   background-color: grey;
+  border: solid 3px black;
   color: white;
   line-height: 75px;
   border-radius: 10px;
@@ -180,6 +181,10 @@ header .header_container img {
 
 .table_container .car_create_container form .stored_power_options a:hover {
   background-color: darkgray;
+}
+
+.table_container .car_create_container form .stored_power_options .disabled {
+  border: solid 3px darkred;
 }
 
 .table_container .car_create_container form .error {

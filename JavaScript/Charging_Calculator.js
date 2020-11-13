@@ -88,14 +88,20 @@ addCarButton.addEventListener('click', function() {
         let carNeededMiles = ValidateNextJourney(nextDistanceInput.value)
         let carLeaveTime = ValidateLeaveTime(leaveTimeInput.value)
 
-        console.log(carReg)
+        // console.log(carReg)
         // If every input field is valid, do this code.
         if (carReg != false && carCurrentMiles != false && carNeededMiles != false && carLeaveTime != false) {
-
+            // console.log("carCurrentMiles: " + carCurrentMiles)
             let totalchargeneeded = Math.round(carNeededMiles/4)
-            let currentcharge = carCurrentMiles/4
+            let currentcharge
+            if (carCurrentMiles === true) {
+                currentcharge = 0;
+            } else {
+                currentcharge = carCurrentMiles/4
+            }
             // let carchargeperhour = new [0,0,0,0,0,0,0,0,0,0]
             addCar(carCounter, carReg, carCurrentMiles, carNeededMiles, currentcharge, totalchargeneeded, carLeaveTime[0], carLeaveTime[1], null)
+
 
         }
     }
@@ -137,18 +143,24 @@ function ValidateRegistration(value) {
 }
 
 function ValidateStoredRange(value) {
-    let rangeValue = parseInt(value)
-    if (parseInt(rangeValue)) {
-        if (rangeValue >= 0 && rangeValue <= 250) {
-            storedDistanceError.textContent = ''
-            return rangeValue
+    // console.log(noStoredPower)
+    if (!noStoredPower) {
+        let rangeValue = parseInt(value)
+        // console.log("rangevalue: " + rangeValue)
+        if (parseInt(rangeValue)) {
+            if (rangeValue >= 0 && rangeValue <= 250) {
+                storedDistanceError.textContent = ''
+                return rangeValue
+            } else {
+                storedDistanceError.textContent = storedDistanceErrorText
+                return false
+            }
         } else {
             storedDistanceError.textContent = storedDistanceErrorText
             return false
         }
     } else {
-        storedDistanceError.textContent = storedDistanceErrorText
-        return false
+        return true
     }
 }
 
@@ -226,27 +238,46 @@ function ValidateLeaveTime(value) {
 // #endregion
 
 // #region Stored Distance Form 
-let storedpower = false;
-const noPowerButton = document.getElementById('no_power_button')
-const somePowerButton = document.getElementById('some_power_button')
+let noStoredPower = true;
+let noPowerButton = document.getElementById('no_power_button')
+let somePowerButton = document.getElementById('some_power_button')
+const inputTextBox = document.getElementById('stored_range')
+const inputTextAnnotation = document.getElementById('input_annotation')
+
+// Default is true
+somePowerButton.classList.remove('disabled')
+noPowerButton.classList.add('disabled')
+inputTextBox.style.display = 'none'
+inputTextAnnotation.style.display = 'none'
 
 noPowerButton.addEventListener('click', function() {
-    if (storedpower) {
-        
-    }
+    // if (storedpower) {
+    somePowerButton.classList.remove('disabled')
+    noPowerButton.classList.add('disabled')
+    inputTextBox.style.display = 'none'
+    inputTextAnnotation.style.display = 'none'
+    noStoredPower = true
+    // }
 })
 
 somePowerButton.addEventListener('click', function() {
-    if (!storedpower) {
-        
-    }
+    // if (!storedpower) {
+    noPowerButton.classList.remove('disabled')
+    somePowerButton.classList.add('disabled')
+    inputTextBox.style.display = 'inline-block'
+    inputTextAnnotation.style.display = 'block'
+    noStoredPower = false
+    // }
 })
 // #endregion
+
 function addCar(carCounter, carReg, carCurrentMiles, carNeededMiles, carCurrentCharge, carTotalNeededCharge, carLeaveTimeHour, carLeaveTimeMinute) {
     let newCar = new Car(carCounter, carReg, carCurrentMiles, carNeededMiles, carCurrentCharge, carTotalNeededCharge, carLeaveTimeHour, carLeaveTimeMinute, null)
     carArray.push(newCar)
     carCounter++
 
+    console.log("addCar -> carNeededMiles: " + carNeededMiles)
+    // console.log("carCurrentMiles 2: " + carCurrentMiles)
     setChargeScore()
     sortCars()
     CalculateCharging(systemHour)
@@ -270,26 +301,41 @@ function setChargeScore() {
     // Gets and assigns a charging score
     for (let x = 0; x < carArray.length; x++) { // For each car in the array
 
+        let hoursLeft
+        let carHour = carArray[x].leavingtimehour
+        if (carHour > 17) {
+            hoursLeft = 17 - currentHour
+        } else {
+            hoursLeft = carHour - currentHour
+        }
+
         let currentrangemiles = carArray[x].currentrangemiles 
         let rangedneededmiles = carArray[x].rangedneededmiles
 
-        if (currentrangemiles < rangedneededmiles) { // Look if the car has enough charge or not.
+        let distanceToCharge;
+        let kwhToCharge;
+        let chargeScore;
 
-            let hoursLeft
-            let carHour = carArray[x].leavingtimehour
-            if (carHour > 17) {
-                hoursLeft = 17 - currentHour
+        console.log("sort: " + currentrangemiles)
+
+        if (currentrangemiles === true || currentrangemiles < rangedneededmiles) {
+
+            // console.log("currentrangemiles === true || currentrangemiles < rangedneededmiles")
+            // noStoredRange = true
+            if (currentrangemiles === true) {
+                distanceToCharge = rangedneededmiles
             } else {
-                hoursLeft = carHour - currentHour
+                distanceToCharge = rangedneededmiles - currentrangemiles
             }
 
-            let distanceToCharge = rangedneededmiles - currentrangemiles // How many miles of charge is needed
-            let kwhToCharge = distanceToCharge / 4; // How many kwh does the remaining distance require?
-            let chargeScore = kwhToCharge / hoursLeft // Average kwh Needed to charge per hour
+            kwhToCharge = distanceToCharge / 4
+            chargeScore = kwhToCharge / hoursLeft
 
             scoreForCars.push(chargeScore)
             carArray[x].chargescore = chargeScore
+
         } else {
+            // console.log("else")
             scoreForCars.push(0)
             carArray[x].chargescore = 0
         }
@@ -462,10 +508,16 @@ function displayCars() {
 
             carRegBox[x].textContent = sortedCarArray[x].registration + ": " + Math.round(sortedCarArray[x].currentpower/sortedCarArray[x].totalpowerneeded)*100 + "%"
 
+            // console.log(sortedCarArray[x].currentrangemiles + "---")
             if (sortedCarArray[x].currentrangemiles >= sortedCarArray[x].rangedneededmiles) {
                 chargeValueBox[x].textContent = "Charged!"
             } else {
-                chargeValueBox[x].textContent = sortedCarArray[x].currentrangemiles + '/' + Math.round(sortedCarArray[x].rangedneededmiles) + ' miles'
+                // console.log("2: " + sortedCarArray[x].currentrangemiles)
+                if (sortedCarArray[x].currentrangemiles == false) {
+                    chargeValueBox[x].textContent = 0 + ' / ' + Math.round(sortedCarArray[x].rangedneededmiles) + ' miles'
+                } else {
+                    chargeValueBox[x].textContent = sortedCarArray[x].currentrangemiles + ' / ' + Math.round(sortedCarArray[x].rangedneededmiles) + ' miles'
+                }
             }
 
         } else {
@@ -490,3 +542,5 @@ function removeCar(index) {
     chargeCar()
     displayCars()
 }
+
+function 
