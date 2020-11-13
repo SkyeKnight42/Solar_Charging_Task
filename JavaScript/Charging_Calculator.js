@@ -71,11 +71,19 @@ let hourChargingArray = []
 // #region
 for (let x = 0; x < hourButtons.length; x++) {
     hourButtons[x].addEventListener('click', function() {
-        hourButtons[systemHour - 7].classList.remove('charging')
         
-        systemHour = parseInt(hourButtons[x].textContent)
-        hourButtons[parseInt(hourButtons[x].textContent)-7].classList.add('charging')
-        // console.log("systemHour changed to: " + systemHour)
+        let previousHourValue = systemHour
+        let newHour = parseInt(hourButtons[x].textContent);
+
+        if (newHour > previousHourValue) {
+            hourButtons[systemHour - 7].classList.remove('charging')
+            systemHour = parseInt(hourButtons[x].textContent)
+            hourButtons[parseInt(hourButtons[x].textContent)-7].classList.add('charging')
+    
+            if (carArray.length > 0) {
+                hourChange(previousHourValue)
+            }
+        }
     })
 }
 
@@ -276,7 +284,7 @@ function addCar(carCounter, carReg, carCurrentMiles, carNeededMiles, carCurrentC
     carArray.push(newCar)
     carCounter++
 
-    console.log("addCar -> carNeededMiles: " + carNeededMiles)
+    // console.log("addCar -> carNeededMiles: " + carNeededMiles)
     // console.log("carCurrentMiles 2: " + carCurrentMiles)
     setChargeScore()
     sortCars()
@@ -316,7 +324,7 @@ function setChargeScore() {
         let kwhToCharge;
         let chargeScore;
 
-        console.log("sort: " + currentrangemiles)
+        // console.log("sort: " + currentrangemiles)
 
         if (currentrangemiles === true || currentrangemiles < rangedneededmiles) {
 
@@ -506,11 +514,14 @@ function displayCars() {
 
         if (x < sortedCarArray.length) {
 
-            carRegBox[x].textContent = sortedCarArray[x].registration + ": " + Math.round(sortedCarArray[x].currentpower/sortedCarArray[x].totalpowerneeded)*100 + "%"
+            let chargePercentage = (sortedCarArray[x].currentpower/sortedCarArray[x].totalpowerneeded)*100
+            carRegBox[x].textContent = sortedCarArray[x].registration + ": " + Math.round(chargePercentage) + "%"
 
             // console.log(sortedCarArray[x].currentrangemiles + "---")
             if (sortedCarArray[x].currentrangemiles >= sortedCarArray[x].rangedneededmiles) {
                 chargeValueBox[x].textContent = "Charged!"
+                carRegBox[x].classList.add('charging')
+                chargeValueBox[x].classList.add('charging')
             } else {
                 // console.log("2: " + sortedCarArray[x].currentrangemiles)
                 if (sortedCarArray[x].currentrangemiles == false) {
@@ -532,9 +543,9 @@ function displayCars() {
 
 function removeCar(index) {
     carCounter--
-    console.log(carArray)
+    // console.log(carArray)
     carArray.splice(index, 1)
-    console.log(carArray)
+    // console.log(carArray)
 
     setChargeScore()
     sortCars()
@@ -543,4 +554,25 @@ function removeCar(index) {
     displayCars()
 }
 
-function 
+// Change Hour 
+function hourChange(previousHour) {
+
+    // for every car
+    for (let x = 0; x < sortedCarArray.length; x++) {
+
+        // for every hour
+        for (let y = 0; y < systemHour-7; y++) {
+
+            sortedCarArray[x].currentpower += sortedCarArray[x].carchargeperhour[y]
+            sortedCarArray[x].currentrangemiles = sortedCarArray[x].currentpower * 4
+
+        }
+
+    }
+
+    setChargeScore()
+    sortCars()
+    CalculateCharging(systemHour)
+    chargeCar()
+    displayCars()
+}
