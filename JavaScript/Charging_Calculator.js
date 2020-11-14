@@ -1,6 +1,6 @@
 
 class Car {
-    constructor(carid, registration, currentrangemiles, rangedneededmiles, currentpower, totalpowerneeded, leavingtimehour, leavingtimeminute, chargescore, carchargeperhour) {
+    constructor(carid, registration, currentrangemiles, rangedneededmiles, currentpower, totalpowerneeded, leavingtimehour, leavingtimeminute, chargescore, carchargeperhour, canchargeintime) {
         this.carid = carid;
         this.registration = registration;
         this.currentrangemiles = currentrangemiles;
@@ -11,6 +11,7 @@ class Car {
         this.leavingtimeminute = leavingtimeminute;
         this.chargescore = chargescore;
         this.carchargeperhour = [0,0,0,0,0,0,0,0,0,0];
+        this.canchargeintime = canchargeintime;
     }
 }
 
@@ -420,6 +421,13 @@ function CalculateCharging(_hour) {
                 for (let h = 1; h <= sortedCarArray[x].carchargeperhour.length; h++) {
                     totalPlannedCharge += sortedCarArray[x].carchargeperhour[h-1]
                 }
+                
+                if (y == 9) {
+                    if (totalPlannedCharge + sortedCarArray[x].currentpower < sortedCarArray[x].rangedneededmiles / 4) {
+                        sortedCarArray[x].canchargeintime = false;
+                        console.log("car: " + x + " won't charge in time.")
+                    }
+                }
 
                 // Do we need to charge this car?
                 // if (powerStored < powerNeeded) {
@@ -517,13 +525,11 @@ function displayCars() {
             let chargePercentage = (sortedCarArray[x].currentpower/sortedCarArray[x].totalpowerneeded)*100
             carRegBox[x].textContent = sortedCarArray[x].registration + ": " + Math.round(chargePercentage) + "%"
 
-            // console.log(sortedCarArray[x].currentrangemiles + "---")
             if (sortedCarArray[x].currentrangemiles >= sortedCarArray[x].rangedneededmiles) {
                 chargeValueBox[x].textContent = "Charged!"
                 carRegBox[x].classList.add('charging')
                 chargeValueBox[x].classList.add('charging')
             } else {
-                // console.log("2: " + sortedCarArray[x].currentrangemiles)
                 if (sortedCarArray[x].currentrangemiles == false) {
                     chargeValueBox[x].textContent = 0 + ' / ' + Math.round(sortedCarArray[x].rangedneededmiles) + ' miles'
                 } else {

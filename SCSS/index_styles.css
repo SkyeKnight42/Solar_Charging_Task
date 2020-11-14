@@ -119,6 +119,10 @@ header .header_container img {
   color: white;
 }
 
+.table_container .car_container table tr .cant_charge {
+  background-color: red;
+}
+
 .table_container .car_container table .charging_values td:last-of-type {
   border-right: none;
 }
