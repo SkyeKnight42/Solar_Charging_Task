@@ -307,17 +307,24 @@ function setChargeScore() {
         currentHour++
     }
 
+    currentHour = systemHour
+
     // Gets and assigns a charging score
     for (let x = 0; x < carArray.length; x++) { // For each car in the array
 
         let hoursLeft
         let carHour = carArray[x].leavingtimehour
-        if (carHour > 17) {
-            hoursLeft = 17 - currentHour
-        } else {
+        // console.log("car hour: " + carHour)
+        // console.log("current hour: " + currentHour)
+        // console.log("leave time hour: " + carArray[x].leavingtimehour)
+        // if (carHour > 17) {
+            // hoursLeft = currentHour - carHour
             hoursLeft = carHour - currentHour
-        }
+        // } else {
+        //     hoursLeft = carHour - currentHour
+        // }
 
+        // console.log("hours left: " + hoursLeft)
         let currentrangemiles = carArray[x].currentrangemiles 
         let rangedneededmiles = carArray[x].rangedneededmiles
 
@@ -336,17 +343,22 @@ function setChargeScore() {
             } else {
                 distanceToCharge = rangedneededmiles - currentrangemiles
             }
-
+            // console.log("distance to charge: " + distanceToCharge)
             kwhToCharge = distanceToCharge / 4
             chargeScore = kwhToCharge / hoursLeft
 
             scoreForCars.push(chargeScore)
             carArray[x].chargescore = chargeScore
+            if (chargeScore > 11) {
+                carArray[x].canchargeintime = false
+            }
 
         } else {
             // console.log("else")
             scoreForCars.push(0)
             carArray[x].chargescore = 0
+
+            carArray[x].canchargeintime = true
         }
     }
 }
@@ -530,11 +542,15 @@ function displayCars() {
                 carRegBox[x].classList.add('charging')
                 chargeValueBox[x].classList.add('charging')
             } else {
-                if (sortedCarArray[x].currentrangemiles == false) {
+                console.log(sortedCarArray[x].currentrangemiles)
+                if (sortedCarArray[x].currentrangemiles === false) {
                     chargeValueBox[x].textContent = 0 + ' / ' + Math.round(sortedCarArray[x].rangedneededmiles) + ' miles'
                 } else {
                     chargeValueBox[x].textContent = sortedCarArray[x].currentrangemiles + ' / ' + Math.round(sortedCarArray[x].rangedneededmiles) + ' miles'
                 }
+            }
+            if (sortedCarArray[x].canchargeintime == false) {
+                chargeValueBox[x].classList.add('cant_charge')
             }
 
         } else {
