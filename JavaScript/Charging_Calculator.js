@@ -349,9 +349,6 @@ function setChargeScore() {
 
             scoreForCars.push(chargeScore)
             carArray[x].chargescore = chargeScore
-            if (chargeScore > 11) {
-                carArray[x].canchargeintime = false
-            }
 
         } else {
             // console.log("else")
@@ -360,6 +357,17 @@ function setChargeScore() {
 
             carArray[x].canchargeintime = true
         }
+
+        // console.log(chargeScore)
+        // if (chargeScore > 11) {
+        //     console.log("charge score is greater than 11")
+        //     carArray[x].canchargeintime = false
+        // } else {
+        //     console.log("charge score is smaller than 11")
+        //     carArray[x].canchargeintime = true
+        // }
+
+        // console.log(chargeScore)
     }
 }
 
@@ -534,6 +542,14 @@ function displayCars() {
 
         if (x < sortedCarArray.length) {
 
+            let chargeTotal = 0
+            // can the car charge
+            for (let y = 0; y < 10; y++) {
+                console.log("-- " + sortedCarArray[x].carchargeperhour[y])
+                chargeTotal += sortedCarArray[x].carchargeperhour[y]
+            }
+            console.log("chargeTotal: " + chargeTotal)
+
             let chargePercentage = (sortedCarArray[x].currentpower/sortedCarArray[x].totalpowerneeded)*100
             carRegBox[x].textContent = sortedCarArray[x].registration + ": " + Math.round(chargePercentage) + "%"
 
@@ -549,7 +565,8 @@ function displayCars() {
                     chargeValueBox[x].textContent = sortedCarArray[x].currentrangemiles + ' / ' + Math.round(sortedCarArray[x].rangedneededmiles) + ' miles'
                 }
             }
-            if (sortedCarArray[x].canchargeintime == false) {
+            if (sortedCarArray[x].canchargeintime === false) {
+                console.log(sortedCarArray[x])
                 chargeValueBox[x].classList.add('cant_charge')
             }
 
