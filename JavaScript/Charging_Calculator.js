@@ -545,7 +545,6 @@ function displayCars() {
             let chargeTotal = 0
             // can the car charge
             for (let y = 0; y < 10; y++) {
-                console.log("-- " + sortedCarArray[x].carchargeperhour[y])
                 chargeTotal += sortedCarArray[x].carchargeperhour[y]
             }
             console.log("chargeTotal: " + chargeTotal)
@@ -565,10 +564,10 @@ function displayCars() {
                     chargeValueBox[x].textContent = sortedCarArray[x].currentrangemiles + ' / ' + Math.round(sortedCarArray[x].rangedneededmiles) + ' miles'
                 }
             }
-            if (sortedCarArray[x].canchargeintime === false) {
-                console.log(sortedCarArray[x])
-                chargeValueBox[x].classList.add('cant_charge')
-            }
+            // if (sortedCarArray[x].canchargeintime === false) {
+            //     console.log(sortedCarArray[x])
+            //     chargeValueBox[x].classList.add('cant_charge')
+            // }
 
         } else {
 
