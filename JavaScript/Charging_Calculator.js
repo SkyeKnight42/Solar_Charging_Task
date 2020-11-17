@@ -547,7 +547,7 @@ function displayCars() {
             for (let y = 0; y < 10; y++) {
                 chargeTotal += sortedCarArray[x].carchargeperhour[y]
             }
-            console.log("chargeTotal: " + chargeTotal)
+            // console.log("chargeTotal: " + chargeTotal)
 
             let chargePercentage = (sortedCarArray[x].currentpower/sortedCarArray[x].totalpowerneeded)*100
             carRegBox[x].textContent = sortedCarArray[x].registration + ": " + Math.round(chargePercentage) + "%"
@@ -557,8 +557,8 @@ function displayCars() {
                 carRegBox[x].classList.add('charging')
                 chargeValueBox[x].classList.add('charging')
             } else {
-                console.log(sortedCarArray[x].currentrangemiles)
-                if (sortedCarArray[x].currentrangemiles === false) {
+                // console.log(sortedCarArray[x].currentpower)
+                if (chargeTotal == 0) {
                     chargeValueBox[x].textContent = 0 + ' / ' + Math.round(sortedCarArray[x].rangedneededmiles) + ' miles'
                 } else {
                     chargeValueBox[x].textContent = sortedCarArray[x].currentrangemiles + ' / ' + Math.round(sortedCarArray[x].rangedneededmiles) + ' miles'
