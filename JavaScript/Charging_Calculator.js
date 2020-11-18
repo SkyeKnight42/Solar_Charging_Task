@@ -66,6 +66,10 @@ let sortedCarArray = []
 // When will each car charge?
 let hourChargingArray = []
 
+// end day button
+const endButton = document.getElementById('end_button')
+let endOfDay = false
+
 // #endregion
 
 // Event Listeners
@@ -73,16 +77,18 @@ let hourChargingArray = []
 for (let x = 0; x < hourButtons.length; x++) {
     hourButtons[x].addEventListener('click', function() {
         
-        let previousHourValue = systemHour
-        let newHour = parseInt(hourButtons[x].textContent);
-
-        if (newHour > previousHourValue) {
-            hourButtons[systemHour - 7].classList.remove('charging')
-            systemHour = parseInt(hourButtons[x].textContent)
-            hourButtons[parseInt(hourButtons[x].textContent)-7].classList.add('charging')
+        if (!endOfDay) {
+            let previousHourValue = systemHour
+            let newHour = parseInt(hourButtons[x].textContent);
     
-            if (carArray.length > 0) {
-                hourChange(previousHourValue)
+            if (newHour > previousHourValue) {
+                hourButtons[systemHour - 7].classList.remove('charging')
+                systemHour = parseInt(hourButtons[x].textContent)
+                hourButtons[parseInt(hourButtons[x].textContent)-7].classList.add('charging')
+        
+                if (carArray.length > 0) {
+                    hourChange(previousHourValue)
+                }
             }
         }
     })
@@ -123,6 +129,10 @@ for (let x = 0; x < removeCarButton.length; x++) {
         }
     })
 }
+
+endButton.addEventListener('click', function() {
+    endDay(systemHour)
+})
 
 // #endregion
 
@@ -444,8 +454,8 @@ function CalculateCharging(_hour) {
                 
                 if (y == 9) {
                     if (totalPlannedCharge + sortedCarArray[x].currentpower < sortedCarArray[x].rangedneededmiles / 4) {
-                        sortedCarArray[x].canchargeintime = false;
-                        console.log("car: " + x + " won't charge in time.")
+                        // sortedCarArray[x].canchargeintime = false;
+                        // console.log("car: " + x + " won't charge in time.")
                     }
                 }
 
@@ -542,12 +552,13 @@ function displayCars() {
 
         if (x < sortedCarArray.length) {
 
-            let chargeTotal = 0
+            let chargeTotal = sortedCarArray[x].currentpower
+
             // can the car charge
             for (let y = 0; y < 10; y++) {
                 chargeTotal += sortedCarArray[x].carchargeperhour[y]
+                console.log("charge total " + y + ": " + chargeTotal)
             }
-            // console.log("chargeTotal: " + chargeTotal)
 
             let chargePercentage = (sortedCarArray[x].currentpower/sortedCarArray[x].totalpowerneeded)*100
             carRegBox[x].textContent = sortedCarArray[x].registration + ": " + Math.round(chargePercentage) + "%"
@@ -557,17 +568,18 @@ function displayCars() {
                 carRegBox[x].classList.add('charging')
                 chargeValueBox[x].classList.add('charging')
             } else {
-                // console.log(sortedCarArray[x].currentpower)
-                if (chargeTotal == 0) {
+                if (sortedCarArray[x].currentpower == 0) {
                     chargeValueBox[x].textContent = 0 + ' / ' + Math.round(sortedCarArray[x].rangedneededmiles) + ' miles'
                 } else {
                     chargeValueBox[x].textContent = sortedCarArray[x].currentrangemiles + ' / ' + Math.round(sortedCarArray[x].rangedneededmiles) + ' miles'
                 }
             }
-            // if (sortedCarArray[x].canchargeintime === false) {
-            //     console.log(sortedCarArray[x])
-            //     chargeValueBox[x].classList.add('cant_charge')
-            // }
+
+            if (chargeTotal * 4 < Math.round(sortedCarArray[x].rangedneededmiles)) {
+                // console.log("charge*4: " + chargeTotal * 4)
+                // console.log("range needed: " + Math.round(sortedCarArray[x].rangedneededmiles))
+                chargeValueBox[x].classList.add("cant_charge")
+            }
 
         } else {
 
@@ -612,5 +624,27 @@ function hourChange(previousHour) {
     sortCars()
     CalculateCharging(systemHour)
     chargeCar()
+    displayCars()
+}
+
+// End of Day
+function endDay(systemHour) {
+
+    endOfDay = true
+    for (let x = 0; x < hourButtons.length; x++) {
+        hourButtons[x].classList.remove('charging')
+    } 
+
+    endButton.classList.add('charging')
+    console.log("endDay systemHour: " + systemHour)
+    for (let x = 0; x < sortedCarArray.length; x++) {
+        for (let y = (systemHour - 7); y < 10; y ++ ) {
+            console.log("endDay Y: " + y)
+
+            sortedCarArray[x].currentpower += sortedCarArray[x].carchargeperhour[y]
+            sortedCarArray[x].currentrangemiles = sortedCarArray[x].currentpower * 4
+        }
+    }
+
     displayCars()
 }
