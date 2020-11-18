@@ -120,7 +120,7 @@ header .header_container img {
 }
 
 .table_container .car_container table tr .cant_charge {
-  background-color: red;
+  background-color: darkred;
 }
 
 .table_container .car_container table .charging_values td:last-of-type {

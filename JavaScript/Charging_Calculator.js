@@ -557,7 +557,7 @@ function displayCars() {
             // can the car charge
             for (let y = 0; y < 10; y++) {
                 chargeTotal += sortedCarArray[x].carchargeperhour[y]
-                console.log("charge total " + y + ": " + chargeTotal)
+                // console.log("charge total " + y + ": " + chargeTotal)
             }
 
             let chargePercentage = (sortedCarArray[x].currentpower/sortedCarArray[x].totalpowerneeded)*100
@@ -636,14 +636,19 @@ function endDay(systemHour) {
     } 
 
     endButton.classList.add('charging')
-    console.log("endDay systemHour: " + systemHour)
     for (let x = 0; x < sortedCarArray.length; x++) {
         for (let y = (systemHour - 7); y < 10; y ++ ) {
-            console.log("endDay Y: " + y)
+            // console.log("endDay Y: " + y)
 
             sortedCarArray[x].currentpower += sortedCarArray[x].carchargeperhour[y]
             sortedCarArray[x].currentrangemiles = sortedCarArray[x].currentpower * 4
         }
+    }
+
+    // Remove text content and classes from the charging bxoes
+    for (let g = 0; g < carChargingBox.length; g++) {
+        carChargingBox[g].classList.remove('charging')
+        carChargingBox[g].textContent = ''
     }
 
     displayCars()
